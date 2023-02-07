@@ -8,7 +8,7 @@ import ray.rllib.agents.ppo as ppo
 ray.init(ignore_reinit_error=True)
 from time import sleep
 
-chkpt_root = "tmp/exa"
+chkpt_root = "tmp/ppo"
 ray_results = "{}/ray_results/".format(os.getenv("HOME"))
 
 
@@ -18,7 +18,7 @@ config = ppo.DEFAULT_CONFIG.copy()
 
 config["log_level"] = "WARN"
 agent = ppo.PPOTrainer(config, env=select_env)
-chkpt_file = "tmp/exa/checkpoint_000082"
+chkpt_file = "tmp/ppo/checkpoint_001000"
 
 agent.restore(chkpt_file)
 env = gym.make(select_env)
