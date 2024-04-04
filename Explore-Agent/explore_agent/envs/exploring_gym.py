@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import numpy as np
 import math
 WINDOW_WIDTH = 1600
@@ -675,7 +675,7 @@ class ExploreDrone(gym.Env):
         self.gui_draw_goal_next = assign_dict['gui_draw_goal_next']
         self.gui_draw_goal_points = assign_dict['gui_draw_goal_points']
 
-    def reset(self):
+    def reset(self, *, seed=None, options=None):
         # ─── FLIP MIRROR ─────────────────────────────────────────────────
         if self.env_flipmode:
             if self.env_flipped:
@@ -703,7 +703,8 @@ class ExploreDrone(gym.Env):
         vel_ang_diff = self.drone.vel_ang_diff_interp
         goal_ang_diff = self.drone.goal_ang_diff_interp
         observation10 = np.concatenate((distances, np.array([velocity, vel_ang_diff, goal_ang_diff])))
-        return observation10
+        empty_dict = {}
+        return observation10, empty_dict
 
     def set_spectator_state(self, state, colors=[], frame=None):
         self.drone.visible = False
@@ -750,6 +751,7 @@ class ExploreDrone(gym.Env):
     def step(self, action=None):
         # ─── NORMALIZE ACTION ────────────────────────────────────────────
         # action = [action_acc, action_turn]
+        truncated = False
         if action is None:
             action = [0, 0]
         tmp_action = np.zeros(2)
@@ -795,6 +797,7 @@ class ExploreDrone(gym.Env):
 
             if self.rule_max_steps:
                 if self.drone.framecount_total == self.max_steps - 1:
+                    truncated = True
                     self.set_done()
 
         # ─── GET RETURN VARIABLES ────────────────────────────────────────
@@ -815,7 +818,7 @@ class ExploreDrone(gym.Env):
         # ─── RESET ITERATION VARIABLES ───────────────────────────────────
         self.drone.reward_step = 0
         self.drone.level_previous = self.drone.level
-        return observation10, reward, done, info
+        return observation10, reward, done, truncated,  info
 
     def render(self, mode=None):
         # initialize pygame only when render is called once

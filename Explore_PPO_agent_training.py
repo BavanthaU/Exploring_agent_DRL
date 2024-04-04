@@ -21,7 +21,8 @@ config = PPOConfig().resources(num_gpus=0).rollouts(num_rollout_workers=24)
 
 agent = config.build(env=select_env)
 status = "{:2d} reward {:6.2f}/{:6.2f}/{:6.2f} len {:4.2f}"
-n_iter = 55555n in range(n_iter):
+n_iter = 1000
+for n in range(n_iter):
     result = agent.train()
     if n%50 ==0:
         chkpt_file = agent.save(chkpt_root)
