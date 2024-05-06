@@ -1,6 +1,6 @@
 How to use the updated version :
 
-Main Reuqiremnts: 
+Main Reuquirments: 
 pip install -U tensorflow ray ray[rllib]
 
 How to run: 
